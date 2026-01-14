@@ -641,6 +641,9 @@
     #foot-div{
         flex-direction: column-reverse;
     }
+    #warp-content h1{
+        font-size: 8vw;
+    }
 }
 @media(max-width: 300px){
     .page2-ele{

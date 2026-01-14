@@ -205,20 +205,26 @@ function anime() {
       })
     }
   let h1 = document.querySelector("#hero-head h1");
-  tl.from(h1, {
-    y: "30vw",
-    duration: 0.3,
-  });
+  if(h1){
+    gsap.set(h1, { opacity: 1, y: 0 });
+    tl.from(h1, {
+      y: "30vw",
+      opacity: 0,
+      duration: 0.8,
+      ease: "power3.out",
+    });
+  }
   let h2 = document.querySelector("#main-head h1");
-  tl.from(h2, {
-    y: "30vw",
-    duration: 0.3,
-  });
-  let h3 = document.querySelector("#mini h6");
-  tl.from(h3, {
-    y: -40,
-    duration: 0.3,
-  });
+  if(h2){
+    gsap.set(h2, { opacity: 1, y: 0 });
+    tl.from(h2, {
+      y: "30vw",
+      opacity: 0,
+      duration: 0.8,
+      ease: "power3.out",
+      delay: 0.1,
+    });
+  }
   let mid = document.querySelectorAll(".mid h6");
   mid.forEach(function (h) {
     tl.from(h, {
@@ -271,3 +277,212 @@ function para() {
   });
 }
 para();
+
+// ----------------------------Warp Speed Particle Animation---------------
+function warpSpeedParticles() {
+  const canvas = document.getElementById("warp-canvas");
+  const warpText = document.getElementById("warp-text");
+  if (!canvas || !warpText) return;
+
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  let beams = [];
+  let animationId;
+
+  // Set canvas size
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  // Beam class for horizontal speed lines
+  class Beam {
+    constructor(textRect) {
+      this.textRect = textRect;
+      this.reset();
+    }
+
+    reset() {
+      if (!this.textRect) return;
+      
+      const canvasRect = canvas.getBoundingClientRect();
+      const textLeft = this.textRect.left - canvasRect.left;
+      const textRight = this.textRect.right - canvasRect.left;
+      const textTop = this.textRect.top - canvasRect.top;
+      const textBottom = this.textRect.bottom - canvasRect.top;
+      
+      // Start from left of text area
+      this.x = textLeft - 100;
+      // Random Y position within text area
+      this.y = textTop + Math.random() * (textBottom - textTop);
+      this.width = Math.random() * 2 + 0.5; // Very thin beams
+      this.length = Math.random() * 100 + 50;
+      this.speed = Math.random() * 15 + 20; // Fast speed
+      this.opacity = Math.random() * 0.4 + 0.3;
+      this.textRight = textRight;
+    }
+
+    update() {
+      this.x += this.speed;
+      
+      // Reset if beam has passed the text area
+      if (this.x > this.textRight + 100) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      
+      // Create gradient for beam
+      const gradient = ctx.createLinearGradient(
+        this.x, this.y,
+        this.x + this.length, this.y
+      );
+      gradient.addColorStop(0, "rgba(255, 107, 157, 0)");
+      gradient.addColorStop(0.5, "rgba(78, 205, 196, 0.8)");
+      gradient.addColorStop(1, "rgba(69, 183, 209, 0)");
+      
+      ctx.fillStyle = gradient;
+      ctx.fillRect(this.x, this.y - this.width / 2, this.length, this.width);
+      
+      ctx.restore();
+    }
+  }
+
+  // Particle class
+  class Particle {
+    constructor(x, y) {
+      this.x = x;
+      this.y = y;
+      this.size = Math.random() * 3 + 1;
+      this.speedX = (Math.random() - 0.5) * 2;
+      this.speedY = (Math.random() - 0.5) * 2;
+      this.opacity = Math.random() * 0.5 + 0.5;
+      this.life = Math.random() * 100 + 50;
+      this.maxLife = this.life;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.life--;
+      this.opacity = (this.life / this.maxLife) * 0.8;
+      
+      if (this.life <= 0) {
+        this.reset();
+      }
+    }
+
+    reset() {
+      const rect = warpText.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
+      this.x = rect.left - canvasRect.left + Math.random() * rect.width;
+      this.y = rect.top - canvasRect.top + Math.random() * rect.height;
+      this.life = Math.random() * 100 + 50;
+      this.maxLife = this.life;
+      this.opacity = Math.random() * 0.5 + 0.5;
+      this.size = Math.random() * 3 + 1;
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      
+      // Create gradient for particle
+      const gradient = ctx.createRadialGradient(
+        this.x, this.y, 0,
+        this.x, this.y, this.size * 2
+      );
+      gradient.addColorStop(0, "rgba(255, 107, 157, 1)");
+      gradient.addColorStop(0.5, "rgba(78, 205, 196, 0.8)");
+      gradient.addColorStop(1, "rgba(69, 183, 209, 0)");
+      
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.restore();
+    }
+  }
+
+  // Initialize particles and beams
+  function initParticles() {
+    const rect = warpText.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    const particleCount = 80;
+
+    for (let i = 0; i < particleCount; i++) {
+      const x = rect.left - canvasRect.left + Math.random() * rect.width;
+      const y = rect.top - canvasRect.top + Math.random() * rect.height;
+      particles.push(new Particle(x, y));
+    }
+
+    // Initialize beams - only around warp text
+    const beamCount = 30;
+    for (let i = 0; i < beamCount; i++) {
+      const beam = new Beam(rect);
+      beams.push(beam);
+    }
+  }
+
+  // Animation loop
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Update text rect for beams (in case of resize or scroll)
+    const rect = warpText.getBoundingClientRect();
+    
+    // Draw and update beams (speed lines) - only around warp text
+    beams.forEach(beam => {
+      beam.textRect = rect;
+      beam.update();
+      beam.draw();
+    });
+    
+    // Draw and update particles (fireflies)
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
+    });
+
+    animationId = requestAnimationFrame(animate);
+  }
+
+  // Start animation when section is visible
+  function startAnimation() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          if (!animationId) {
+            resizeCanvas();
+            initParticles();
+            animate();
+          }
+        } else {
+          if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+            particles = [];
+            beams = [];
+          }
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const warpSection = document.getElementById("warp-section");
+    if (warpSection) {
+      observer.observe(warpSection);
+    }
+  }
+
+  startAnimation();
+}
+
+// Initialize warp speed particles
+warpSpeedParticles();
