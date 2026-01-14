@@ -57,7 +57,7 @@
         height: fit-content;
     }
     #hero-handle h1{
-        font-size: 9rem;
+        font-size: 8rem;
     }
     #mini h6{
         font-size: 1.3rem;
@@ -96,6 +96,15 @@
     #btn-div button a{
         font-size: 1.3rem;
         padding: 0.6rem 1.5rem;
+    }
+    #services{
+        margin-top: 140px;
+    }
+    #services-head h1{
+        font-size: 6rem;
+    }
+    .service-item h2{
+        font-size: 3rem;
     }
     #page-3{
         margin-top: 4rem;
@@ -154,7 +163,7 @@
         padding-left: 15px;
     }
     #hero-handle h1{
-        font-size: 10.5vw;
+        font-size: 7.35vw;
     }
     #hero-handle h6{
         font-size: 1.5vw;
@@ -193,6 +202,19 @@
     #btn-div{
         margin-top: 70px;
     }
+    #services{
+        padding: 30px 15px;
+    }
+    #services-head h1{
+        font-size: 7vw;
+        padding-left: 15px;
+    }
+    .service-item{
+        padding: 25px 15px;
+    }
+    .service-item h2{
+        font-size: 4vw;
+    }
     #btn-div button a{
         font-size: 1.2rem;
     }
@@ -227,7 +249,7 @@
 }
 @media(max-width: 1065px){
     #hero-handle h1{
-        font-size: 13vw;
+        font-size: 9.1vw;
     }
 }
 @media(max-width: 1000px){
@@ -259,7 +281,7 @@
 }
 @media(max-width: 900px){
     #hero-handle h1{
-    font-size: 13vw;
+    font-size: 9.1vw;
     }
     #mini h6{
         font-size: 2vw;
@@ -282,6 +304,12 @@
     }
     .page2-ele h6{
         font-size: 2vw;
+    }
+    #services-head h1{
+        font-size: 8vw;
+    }
+    .service-item h2{
+        font-size: 5vw;
     }
     .page2-ele img{
         width: 280px;
@@ -326,7 +354,7 @@
 
 @media(max-width: 800px){
     #hero-handle h1{
-        font-size: 14vw;
+        font-size: 9.8vw;
     }
     #mini h6{
         font-size: 2.68vw;
@@ -430,7 +458,7 @@
         gap: 20px;
     }
     #hero-handle h1{
-        font-size: 16.5vw;
+        font-size: 11.55vw;
     }
     #mini h6{
         font-size: 3.3vw;
@@ -501,7 +529,7 @@
         font-size: 4.5vw;
     }
     #hero-handle h1{
-        font-size: 16.7vw;
+        font-size: 11.65vw;
     }
     #mini h6{
         font-size: 3.6vw;
@@ -536,6 +564,16 @@
     }
     .page2-ele h6{
         font-size: 3vw;
+    }
+    #services-head h1{
+        font-size: 9.6vw;
+        padding-left: 15px;
+    }
+    .service-item{
+        padding: 20px 15px;
+    }
+    .service-item h2{
+        font-size: 6vw;
     }
     #page-2{
         margin-top: 19vw;
@@ -612,6 +650,6 @@
         gap: 5px;
     }
     #hero-handle h1{
-        font-size: 15.2vw;
+        font-size: 10.6vw;
     }
 }

@@ -222,7 +222,7 @@ nav ul li:hover::after{
 
 #page-1 h1{
     text-transform: uppercase;
-    font-size: 10vw;
+    font-size: 8vw;
     line-height: 0.92;
     color: var(--grey);
     padding-left: 30px;
@@ -230,6 +230,10 @@ nav ul li:hover::after{
 #hero-handle{
     /* background-color: green; */
     width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    flex-wrap: wrap;
 }
 #hero-head{
     /* background-color: green; */
@@ -245,9 +249,9 @@ nav ul li:hover::after{
     display: flex;
     flex-direction: column;
     /* text-align: end; */
-    padding-left: 10vw;
+    padding-left: 20px;
     gap: 12px;
-    text-align: end;
+    text-align: start;
     overflow: hidden;
 }
 #mini{
@@ -408,6 +412,69 @@ nav ul li:hover::after{
 }
 #btn-div button:hover a {
     color: black;
+}
+
+/* ----------------------------Services Section--------------- */
+#services{
+    width: 100%;
+    margin-top: 80px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+#services-head{
+    width: 100%;
+    overflow: hidden;
+}
+#services-head h1{
+    font-size: 7vw;
+    color: var(--grey);
+    text-transform: uppercase;
+    padding-left: 30px;
+}
+#services-list{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.service-item{
+    width: 100%;
+    padding: 25px 30px;
+    border-bottom: 2px solid #a3a3a36e;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.service-item:first-child{
+    border-top: 2px solid #a3a3a36e;
+}
+.service-item h2{
+    font-size: 4vw;
+    color: var(--white);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: all 0.3s ease;
+}
+.service-item:hover h2{
+    color: var(--grey);
+    transform: translateX(10px);
+}
+.service-item::after{
+    content: "";
+    width: 100%;
+    height: 2px;
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    background-color: var(--white);
+    transition: all 0.3s ease;
+}
+.service-item:hover::after{
+    left: 0;
 }
 
 #sponsers{
