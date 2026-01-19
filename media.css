@@ -57,7 +57,7 @@
         height: fit-content;
     }
     #hero-handle h1{
-        font-size: 8rem;
+        font-size: 10rem;
     }
     #mini h6{
         font-size: 1.3rem;
@@ -163,10 +163,13 @@
         padding-left: 15px;
     }
     #hero-handle h1{
-        font-size: 7.35vw;
+        font-size: 10vw;
     }
     #hero-handle h6{
         font-size: 1.5vw;
+    }
+    #bg-text-word, .bg-text-particle{
+        font-size: 15vw;
     }
     #main-mid h6{
         font-size: 1.2rem;
@@ -249,7 +252,10 @@
 }
 @media(max-width: 1065px){
     #hero-handle h1{
-        font-size: 9.1vw;
+        font-size: 15vw;
+    }
+    #bg-text-word, .bg-text-particle{
+        font-size: 18vw;
     }
 }
 @media(max-width: 1000px){
@@ -281,7 +287,7 @@
 }
 @media(max-width: 900px){
     #hero-handle h1{
-    font-size: 9.1vw;
+    font-size: 15vw;
     }
     #mini h6{
         font-size: 2vw;
@@ -354,7 +360,7 @@
 
 @media(max-width: 800px){
     #hero-handle h1{
-        font-size: 9.8vw;
+        font-size: 15vw;
     }
     #mini h6{
         font-size: 2.68vw;
@@ -458,7 +464,7 @@
         gap: 20px;
     }
     #hero-handle h1{
-        font-size: 11.55vw;
+        font-size: 15vw;
     }
     #mini h6{
         font-size: 3.3vw;
@@ -529,10 +535,13 @@
         font-size: 4.5vw;
     }
     #hero-handle h1{
-        font-size: 11.65vw;
+        font-size: 15vw;
     }
     #mini h6{
         font-size: 3.6vw;
+    }
+    #bg-text-word, .bg-text-particle{
+        font-size: 18vw;
     }
     #sponsers{
         height: 35vw;
@@ -653,6 +662,51 @@
         gap: 5px;
     }
     #hero-handle h1{
-        font-size: 10.6vw;
+        font-size: 15vw;
+    }
+    #bg-text-word, .bg-particle{
+        font-size: 16vw;
+    }
+}
+
+/* Background text particle responsive adjustments */
+@media(min-width: 1440px){
+    #bg-text-word, .bg-particle{
+        font-size: 8rem !important;
+    }
+    #hero-bg-text{
+        margin-top: 180px !important;
+    }
+}
+@media(max-width: 1439px) and (min-width: 1066px){
+    #bg-text-word, .bg-particle{
+        font-size: 8vw !important;
+    }
+    #hero-bg-text{
+        margin-top: 150px !important;
+    }
+}
+@media(max-width: 1065px) and (min-width: 601px){
+    #bg-text-word, .bg-particle{
+        font-size: 10vw !important;
+    }
+    #hero-bg-text{
+        margin-top: 120px !important;
+    }
+}
+@media(max-width: 600px) and (min-width: 401px){
+    #bg-text-word, .bg-particle{
+        font-size: 12vw !important;
+    }
+    #hero-bg-text{
+        margin-top: 100px !important;
+    }
+}
+@media(max-width: 400px){
+    #bg-text-word, .bg-particle{
+        font-size: 14vw !important;
+    }
+    #hero-bg-text{
+        margin-top: 80px !important;
     }
 }

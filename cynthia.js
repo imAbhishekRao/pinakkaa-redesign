@@ -240,6 +240,121 @@ function anime() {
 }
 anime();
 
+// Logo text rotation animation
+function logoTextAnimation() {
+  const logoP = document.querySelector("#logo-p");
+  const logoText = document.querySelector("#logo-text");
+  const logoTextAlt = document.querySelector("#logo-text-alt");
+  const speedWords = document.querySelectorAll(".speed-word");
+  
+  if (!logoText || !logoTextAlt || !logoP) return;
+  
+  // Calculate position for alt text to appear in same position as "inakkaa"
+  function updateAltTextPosition() {
+    const logoTextRect = logoText.getBoundingClientRect();
+    const logoRect = logoText.parentElement.getBoundingClientRect();
+    const leftOffset = logoTextRect.left - logoRect.left;
+    gsap.set(logoTextAlt, { left: leftOffset + "px" });
+  }
+  
+  // Set initial states - P is always visible
+  gsap.set(logoP, { opacity: 1, y: 0 });
+  gsap.set(logoText, { opacity: 1, y: 0 });
+  gsap.set(logoTextAlt, { opacity: 0, y: 100, visibility: "hidden" });
+  
+  // Update position on load and resize
+  updateAltTextPosition();
+  window.addEventListener("resize", updateAltTextPosition);
+  
+  function showAltText() {
+    const tl = gsap.timeline();
+    
+    // Calculate position based on where "inakkaa" currently is
+    const logoTextRect = logoText.getBoundingClientRect();
+    const logoRect = logoText.parentElement.getBoundingClientRect();
+    const leftOffset = logoTextRect.left - logoRect.left;
+    
+    // Fade out "inakkaa"
+    tl.to(logoText, {
+      opacity: 0,
+      y: -100,
+      duration: 0.5,
+      ease: "power2.in"
+    });
+    
+    // Set position and show "erformance Power Precision" in same spot
+    tl.set(logoTextAlt, { 
+      left: leftOffset + "px",
+      visibility: "visible" 
+    });
+    tl.to(logoTextAlt, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    }, "-=0.3");
+    
+    // Animate words appearance
+    speedWords.forEach((word, index) => {
+      gsap.fromTo(word, 
+        {
+          scale: 0.8,
+          opacity: 0.3
+        },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 0.5,
+          delay: index * 0.15,
+          ease: "back.out(1.7)"
+        }
+      );
+    });
+    
+    // Wait before switching back
+    tl.to({}, {
+      duration: 3,
+      onComplete: showMainText
+    });
+  }
+  
+  function showMainText() {
+    const tl = gsap.timeline();
+    
+    // Fade out "erformance Power Precision"
+    tl.to(logoTextAlt, {
+      opacity: 0,
+      y: -100,
+      duration: 0.5,
+      ease: "power2.in",
+      onComplete: function() {
+        gsap.set(logoTextAlt, { visibility: "hidden" });
+      }
+    });
+    
+    // Fade in "inakkaa"
+    tl.to(logoText, {
+      opacity: 1,
+      y: 0,
+      duration: 0.6,
+      ease: "power2.out"
+    }, "-=0.3");
+    
+    // Wait before switching again
+    tl.to({}, {
+      duration: 2,
+      onComplete: showAltText
+    });
+  }
+  
+  // Start the animation cycle after initial delay
+  setTimeout(() => {
+    showAltText();
+  }, 1500);
+}
+
+logoTextAnimation();
+
 function p2() {
   let page2 = document.querySelector("#page-2");
   gsap.from(page2, {
@@ -486,3 +601,631 @@ function warpSpeedParticles() {
 
 // Initialize warp speed particles
 warpSpeedParticles();
+
+// Background text animation - particle breaking and forming
+function backgroundTextAnimation() {
+  const bgTextContainer = document.getElementById("hero-bg-text");
+  const bgTextWord = document.getElementById("bg-text-word");
+  if (!bgTextWord || !bgTextContainer) {
+    console.log("bg-text-word element not found");
+    return;
+  }
+  
+  console.log("Starting background text particle animation");
+  
+  const words = ["Pinakkaa", "Precision", "Power", "Performance"];
+  let currentWordIndex = 0;
+  let particles = [];
+  
+  // Hide the original word element
+  bgTextWord.style.opacity = '0';
+  
+  function createParticles(word) {
+    // Clear existing particles
+    particles.forEach(p => {
+      if (p.element && p.element.parentNode) {
+        p.element.parentNode.removeChild(p.element);
+      }
+    });
+    particles = [];
+    
+    // Update hidden word to measure
+    bgTextWord.textContent = word;
+    const chars = word.split('');
+    
+    // Get the center position of the container
+    const containerRect = bgTextContainer.getBoundingClientRect();
+    const centerX = containerRect.width / 2;
+    const centerY = 150; // margin-top value
+    
+    // Create a temporary element to measure character positions
+    const tempWord = document.createElement('span');
+    tempWord.style.cssText = `
+      font-size: 8vw;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      position: absolute;
+      visibility: hidden;
+      white-space: nowrap;
+    `;
+    tempWord.textContent = word;
+    bgTextContainer.appendChild(tempWord);
+    const wordWidth = tempWord.offsetWidth;
+    bgTextContainer.removeChild(tempWord);
+    
+    // Calculate starting X position to center the word
+    const startX = centerX - (wordWidth / 2);
+    
+    // Create particle for each character
+    chars.forEach((char, index) => {
+      const particle = document.createElement('span');
+      particle.textContent = char;
+      particle.className = 'bg-particle';
+      particle.style.cssText = `
+        position: absolute;
+        font-size: 8vw;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: blur(2px);
+        opacity: 0;
+        pointer-events: none;
+        letter-spacing: 0.1em;
+      `;
+      
+      // Calculate character position
+      const tempChar = document.createElement('span');
+      tempChar.style.cssText = `
+        font-size: 8vw;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        position: absolute;
+        visibility: hidden;
+      `;
+      tempChar.textContent = word.substring(0, index);
+      bgTextContainer.appendChild(tempChar);
+      const charOffset = tempChar.offsetWidth;
+      bgTextContainer.removeChild(tempChar);
+      
+      const targetX = startX + charOffset;
+      const targetY = centerY;
+      
+      bgTextContainer.appendChild(particle);
+      
+      particles.push({
+        element: particle,
+        targetX: targetX,
+        targetY: targetY,
+        char: char
+      });
+    });
+    
+    return particles;
+  }
+  
+  function breakIntoParticles() {
+    const tl = gsap.timeline();
+    
+    particles.forEach((particle, index) => {
+      // Random scatter positions
+      const randomX = particle.targetX + (Math.random() - 0.5) * 600;
+      const randomY = particle.targetY + (Math.random() - 0.5) * 600;
+      const randomRotation = (Math.random() - 0.5) * 360;
+      
+      tl.to(particle.element, {
+        x: randomX,
+        y: randomY,
+        rotation: randomRotation,
+        scale: 0.3,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power2.in"
+      }, index * 0.02);
+    });
+    
+    return tl;
+  }
+  
+  function formWord(word) {
+    // Create new particles
+    const newParticles = createParticles(word);
+    const tl = gsap.timeline();
+    
+    // Set initial scattered positions
+    newParticles.forEach((particle, index) => {
+      const randomX = particle.targetX + (Math.random() - 0.5) * 600;
+      const randomY = particle.targetY + (Math.random() - 0.5) * 600;
+      const randomRotation = (Math.random() - 0.5) * 360;
+      
+      gsap.set(particle.element, {
+        x: randomX,
+        y: randomY,
+        rotation: randomRotation,
+        scale: 0.3,
+        opacity: 0
+      });
+    });
+    
+    // Animate particles to form word
+    newParticles.forEach((particle, index) => {
+      tl.to(particle.element, {
+        x: particle.targetX,
+        y: particle.targetY,
+        rotation: 0,
+        scale: 1,
+        opacity: 0.4,
+        duration: 1.2,
+        ease: "back.out(1.7)"
+      }, index * 0.04);
+    });
+    
+    return tl;
+  }
+  
+  function animateCycle() {
+    const timeline = gsap.timeline({
+      onComplete: () => {
+        currentWordIndex = (currentWordIndex + 1) % words.length;
+        setTimeout(animateCycle, 300);
+      }
+    });
+    
+    // Break current word if particles exist
+    if (particles.length > 0) {
+      timeline.add(breakIntoParticles());
+    }
+    
+    // Small pause
+    timeline.to({}, { duration: 0.4 });
+    
+    // Form next word
+    timeline.add(formWord(words[currentWordIndex]));
+    
+    // Hold the word
+    timeline.to({}, { duration: 2.5 });
+  }
+  
+  // Start with first word
+  setTimeout(() => {
+    formWord(words[0]).then(() => {
+      setTimeout(animateCycle, 2000);
+    });
+  }, 500);
+}
+
+// Initialize background text animation
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', backgroundTextAnimation);
+} else {
+  backgroundTextAnimation();
+}
+
+// Typography animation - character by character for "a creative touch"
+function typographyAnimation() {
+  const typoText = document.getElementById('typo-text');
+  if (!typoText) {
+    console.log("typo-text element not found");
+    return;
+  }
+  
+  console.log("Starting typography animation");
+  
+  // Get the text and split into characters
+  const text = typoText.textContent;
+  typoText.innerHTML = '';
+  
+  // Create span for each character
+  const chars = text.split('').map(char => {
+    const span = document.createElement('span');
+    if (char === ' ') {
+      span.className = 'space';
+      span.innerHTML = '&nbsp;';
+    } else {
+      span.className = 'char';
+      span.textContent = char;
+    }
+    typoText.appendChild(span);
+    return span;
+  });
+  
+  // Get all character spans (excluding spaces)
+  const charSpans = typoText.querySelectorAll('.char');
+  
+  // Create master timeline with delay
+  const tl = gsap.timeline({ delay: 2.5 });
+  
+  // Animate each character with different effects
+  charSpans.forEach((char, index) => {
+    // Multiple animation types for variety
+    const animType = index % 4;
+    
+    switch(animType) {
+      case 0: // Bounce from bottom with rotation
+        tl.to(char, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotation: 0,
+          filter: 'blur(0px)',
+          duration: 0.8,
+          ease: "elastic.out(1, 0.5)"
+        }, index * 0.05);
+        break;
+        
+      case 1: // Slide from left with fade
+        gsap.set(char, {
+          x: -50,
+          y: 0,
+          rotation: -20,
+          transformOrigin: "left center"
+        });
+        tl.to(char, {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          rotation: 0,
+          filter: 'blur(0px)',
+          duration: 0.6,
+          ease: "back.out(2)"
+        }, index * 0.05);
+        break;
+        
+      case 2: // Scale up from center
+        gsap.set(char, {
+          scale: 0,
+          rotation: 180
+        });
+        tl.to(char, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotation: 0,
+          filter: 'blur(0px)',
+          duration: 0.7,
+          ease: "back.out(3)"
+        }, index * 0.05);
+        break;
+        
+      case 3: // Flip in
+        gsap.set(char, {
+          rotationY: 90,
+          transformOrigin: "center center",
+          transformPerspective: 1000
+        });
+        tl.to(char, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotationY: 0,
+          rotationZ: 0,
+          filter: 'blur(0px)',
+          duration: 0.6,
+          ease: "power2.out"
+        }, index * 0.05);
+        break;
+    }
+  });
+  
+  // Add wave effect after all characters are in
+  tl.add(() => {
+    charSpans.forEach((char, index) => {
+      gsap.to(char, {
+        y: -20,
+        duration: 0.5,
+        repeat: 1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: index * 0.03
+      });
+    });
+  }, "+=0.2");
+  
+  // Add gradient animation effect
+  tl.add(() => {
+    charSpans.forEach((char, index) => {
+      gsap.to(char, {
+        backgroundPosition: "200% 50%",
+        duration: 2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: index * 0.05
+      });
+    });
+  }, "+=0.3");
+  
+  // Continuous subtle animations
+  tl.add(() => {
+    charSpans.forEach((char, index) => {
+      // Random floating
+      gsap.to(char, {
+        y: Math.random() * 10 - 5,
+        duration: 2 + Math.random(),
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: index * 0.1
+      });
+      
+      // Subtle rotation
+      gsap.to(char, {
+        rotation: (Math.random() - 0.5) * 5,
+        duration: 3 + Math.random(),
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: index * 0.15
+      });
+    });
+  });
+  
+  // Hover effect - speedy color change
+  typoText.addEventListener('mouseenter', () => {
+    charSpans.forEach((char, index) => {
+      gsap.to(char, {
+        backgroundPosition: "400% 50%",
+        duration: 0.15,
+        ease: "power2.inOut",
+        delay: index * 0.01,
+        repeat: 3,
+        yoyo: true
+      });
+    });
+  });
+  
+  typoText.addEventListener('mouseleave', () => {
+    charSpans.forEach((char, index) => {
+      gsap.to(char, {
+        backgroundPosition: "0% 50%",
+        duration: 0.3,
+        ease: "power2.out",
+        delay: index * 0.01
+      });
+    });
+  });
+}
+
+// Initialize typography animation
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', typographyAnimation);
+} else {
+  typographyAnimation();
+}
+
+// Floating images on service hover
+function serviceImageFloat() {
+  const services = document.querySelectorAll('.page2-ele');
+  
+  services.forEach(service => {
+    const img = service.querySelector('img');
+    if (!img) return;
+    
+    service.addEventListener('mouseenter', () => {
+      gsap.to(img, {
+        opacity: 1,
+        scale: 1,
+        rotation: 0,
+        duration: 0.4,
+        ease: "power2.out"
+      });
+    });
+    
+    service.addEventListener('mouseleave', () => {
+      gsap.to(img, {
+        opacity: 0,
+        scale: 0.8,
+        rotation: -5,
+        duration: 0.3,
+        ease: "power2.in"
+      });
+    });
+    
+    service.addEventListener('mousemove', (e) => {
+      const rect = service.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      gsap.to(img, {
+        left: x + 50,
+        top: y - 200,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+    });
+  });
+}
+
+// Initialize service image float
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', serviceImageFloat);
+} else {
+  serviceImageFloat();
+}
+
+// Warp speed animation for creative touch on hover
+function creativeWarpSpeed() {
+  const canvas = document.getElementById("creative-warp-canvas");
+  const typoText = document.getElementById("typo-text");
+  if (!canvas || !typoText) return;
+
+  const ctx = canvas.getContext("2d");
+  let particles = [];
+  let beams = [];
+  let animationId = null;
+  let isAnimating = false;
+
+  // Set canvas size
+  function resizeCanvas() {
+    const rect = typoText.getBoundingClientRect();
+    canvas.width = rect.width + 100;
+    canvas.height = rect.height + 50;
+  }
+  resizeCanvas();
+  window.addEventListener("resize", resizeCanvas);
+
+  // Beam class for horizontal speed lines
+  class Beam {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      const rect = typoText.getBoundingClientRect();
+      this.x = -100;
+      this.y = Math.random() * canvas.height;
+      this.width = Math.random() * 2 + 0.5;
+      this.length = Math.random() * 100 + 50;
+      this.speed = Math.random() * 15 + 20;
+      this.opacity = Math.random() * 0.4 + 0.3;
+    }
+
+    update() {
+      this.x += this.speed;
+      if (this.x > canvas.width + 100) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      
+      const gradient = ctx.createLinearGradient(
+        this.x, this.y,
+        this.x + this.length, this.y
+      );
+      gradient.addColorStop(0, "rgba(96, 165, 250, 0)");
+      gradient.addColorStop(0.5, "rgba(167, 139, 250, 0.8)");
+      gradient.addColorStop(1, "rgba(244, 114, 182, 0)");
+      
+      ctx.fillStyle = gradient;
+      ctx.fillRect(this.x, this.y - this.width / 2, this.length, this.width);
+      
+      ctx.restore();
+    }
+  }
+
+  // Particle class
+  class Particle {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * 3 + 1;
+      this.speedX = (Math.random() - 0.5) * 3;
+      this.speedY = (Math.random() - 0.5) * 3;
+      this.life = Math.random() * 100 + 50;
+      this.maxLife = this.life;
+      this.opacity = Math.random() * 0.5 + 0.5;
+    }
+
+    update() {
+      this.x += this.speedX;
+      this.y += this.speedY;
+      this.life--;
+      this.opacity = (this.life / this.maxLife) * 0.8;
+      
+      if (this.life <= 0) {
+        this.reset();
+      }
+    }
+
+    draw() {
+      ctx.save();
+      ctx.globalAlpha = this.opacity;
+      
+      const gradient = ctx.createRadialGradient(
+        this.x, this.y, 0,
+        this.x, this.y, this.size * 2
+      );
+      gradient.addColorStop(0, "rgba(96, 165, 250, 1)");
+      gradient.addColorStop(0.5, "rgba(167, 139, 250, 0.8)");
+      gradient.addColorStop(1, "rgba(244, 114, 182, 0)");
+      
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      
+      ctx.restore();
+    }
+  }
+
+  // Initialize particles and beams
+  function initParticles() {
+    particles = [];
+    beams = [];
+    
+    const particleCount = 60;
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    const beamCount = 25;
+    for (let i = 0; i < beamCount; i++) {
+      beams.push(new Beam());
+    }
+  }
+
+  // Animation loop
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    beams.forEach(beam => {
+      beam.update();
+      beam.draw();
+    });
+    
+    particles.forEach(particle => {
+      particle.update();
+      particle.draw();
+    });
+
+    if (isAnimating) {
+      animationId = requestAnimationFrame(animate);
+    }
+  }
+
+  // Start animation on hover
+  typoText.addEventListener('mouseenter', () => {
+    if (!isAnimating) {
+      isAnimating = true;
+      resizeCanvas();
+      initParticles();
+      canvas.style.opacity = '1';
+      animate();
+    }
+  });
+
+  // Stop animation on mouse leave
+  typoText.addEventListener('mouseleave', () => {
+    isAnimating = false;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+    canvas.style.opacity = '0';
+    // Clear canvas
+    setTimeout(() => {
+      if (!isAnimating) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        particles = [];
+        beams = [];
+      }
+    }, 300);
+  });
+}
+
+// Initialize creative warp speed
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', creativeWarpSpeed);
+} else {
+  creativeWarpSpeed();
+}
